@@ -1,0 +1,11 @@
+{
+  "name": "Remix - MediVoice Medical Kiosk",
+  "description": "An interactive, multi-lingual patient registration and intake kiosk supporting English and Telugu, featuring a secure local database stream and monthly registry organizer.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

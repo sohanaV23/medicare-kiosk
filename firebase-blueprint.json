@@ -1,0 +1,51 @@
+{
+  "entities": {
+    "Patient": {
+      "title": "Patient",
+      "description": "Patient demographic and clinical intake information.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "dob": { "type": "string" },
+        "age": { "type": "integer" },
+        "gender": { "type": "string" },
+        "contactNumber": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "idType": { "type": "string" },
+        "idNumber": { "type": "string" },
+        "isGovEmployee": { "type": "boolean" },
+        "faceCaptureId": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "uniqueId": { "type": "string" },
+        "registrationTime": { "type": "string" },
+        "preferredLanguage": { "type": "string" },
+        "preexistingConditions": { "type": "string" },
+        "currentSymptoms": { "type": "string" }
+      },
+      "required": ["fullName", "gender", "contactNumber", "preferredLanguage"]
+    },
+    "ConsultHistoryItem": {
+      "title": "ConsultHistoryItem",
+      "description": "Structured medical report and patient consultation record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "language": { "type": "string" },
+        "patient": { "type": "object" },
+        "history": { "type": "array" },
+        "report": { "type": "object" }
+      },
+      "required": ["id", "date", "language", "patient"]
+    }
+  },
+  "firestore": {
+    "/patients/{patientId}": {
+      "schema": "ConsultHistoryItem",
+      "description": "Collection of patient consultation history and details."
+    }
+  }
+}

@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Hardened helper functions for validation
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidPatient(data) {
+      return data.id is string
+        && data.id.size() <= 100
+        && data.date is string
+        && data.date.size() <= 100
+        && data.language is string
+        && data.language.size() <= 50
+        && data.patient is map
+        && data.patient.fullName is string
+        && data.patient.fullName.size() <= 200
+        && data.patient.gender is string
+        && data.patient.gender.size() <= 50
+        && data.patient.contactNumber is string
+        && data.patient.contactNumber.size() <= 50;
+    }
+
+    match /patients/{patientId} {
+      allow get: if isValidId(patientId);
+      allow list: if true;
+      allow create, update: if isValidId(patientId) && isValidPatient(request.resource.data);
+      allow delete: if isValidId(patientId);
+    }
+  }
+}

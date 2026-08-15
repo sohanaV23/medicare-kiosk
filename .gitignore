@@ -1,0 +1,27 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Untracked documentation, PDF, data and plan files
+scratch/
+architecture_map.html
+documentation.html
+documentation.md
+implementation_plan.html
+index.html
+medikioskblockdiagram.pdf
+medikioskocrflowchart.pdf
+msme_hackathon_proposal.pdf
+msme_hackathon_proposal_combined.pdf
+operational_manual.md
+patients_database.json
+project_summary.html
+audit_logs.json
+firebase-applet-config.json
+
+
