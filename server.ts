@@ -21,7 +21,7 @@ import { patientRegistrationSchema } from "./backend/schemas/validation";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const CLINIC_ID = process.env.APP_CLINIC_ID || "clinic-0001";
 
 // Production Security Hardening
