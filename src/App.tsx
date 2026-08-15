@@ -50,6 +50,7 @@ export default function App() {
   const [vocalEngine, setVocalEngine] = useState<'cloud' | 'native'>('cloud');
   const [isIframe, setIsIframe] = useState(false);
   const [showSandboxNotice, setShowSandboxNotice] = useState(true);
+  const [isServerWaking, setIsServerWaking] = useState(false);
 
   // Sync window styling, load existing database values and listen for active audio readouts
   useEffect(() => {
@@ -66,15 +67,28 @@ export default function App() {
     const prefs = getVoicePreferences();
     setVocalEngine(prefs.engine);
 
-    // Load patients database from Express server
+    // Load patients database from Express server with wake-up detection
+    let initialLoadComplete = false;
+    const wakeTimer = setTimeout(() => {
+      if (!initialLoadComplete) {
+        setIsServerWaking(true);
+      }
+    }, 1500);
+
     fetch('/api/patients')
       .then(res => res.json())
       .then(data => {
+        initialLoadComplete = true;
+        clearTimeout(wakeTimer);
+        setIsServerWaking(false);
         if (Array.isArray(data)) {
           setHistoryItems(data);
         }
       })
       .catch(err => {
+        initialLoadComplete = true;
+        clearTimeout(wakeTimer);
+        setIsServerWaking(false);
         console.error("Error fetching patient registrations from database API:", err);
       });
 
@@ -454,6 +468,25 @@ export default function App() {
           >
             Dismiss
           </button>
+        </div>
+      )}
+
+      {/* Server Warming Up / Wake-up Connection Notice */}
+      {isServerWaking && (
+        <div className="bg-gradient-to-r from-teal-50 to-emerald-50 border-b border-teal-200/50 px-6 py-3 flex items-center justify-center text-xs text-teal-900 shadow-3xs relative z-30 animate-pulse">
+          <div className="flex items-center gap-3">
+            <span className="flex h-3 w-3 relative shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-teal-600"></span>
+            </span>
+            <p className="font-semibold leading-relaxed">
+              {globalLanguage === 'telugu' ? (
+                <span>⚙️ <strong>సర్వర్ కనెక్ట్ అవుతోంది:</strong> కియోస్క్ సిద్ధమవుతోంది... దయచేసి 30-45 సెకన్లు వేచి ఉండండి (నిష్క్రియ సమయం తర్వాత మేల్కొలుపు).</span>
+              ) : (
+                <span>⚙️ <strong>Server Connecting:</strong> Kiosk database is warming up... Please wait 30-45 seconds (waking up from idle state).</span>
+              )}
+            </p>
+          </div>
         </div>
       )}
 
